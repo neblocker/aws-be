@@ -1,26 +1,28 @@
-import { DynamoDB } from "aws-sdk"
+import { DynamoDB } from "@aws-sdk/client-dynamodb"
+import { unmarshall } from "@aws-sdk/util-dynamodb"
 
-const dynamoDb = new DynamoDB.DocumentClient()
+const dynamoDb = new DynamoDB({ region: "eu-west-1" })
 
 export async function getSingleProduct(productId: string) {
   const params = {
     TableName: process.env.PRODUCT_TABLE,
     Key: {
-      id: productId
+      id: {
+        S: productId
+      }
     }
   }
   const stockParams = {
     TableName: process.env.STOCK_TABLE,
     Key: {
-      product_id: productId
+      product_id: {
+        S: productId
+      }
     }
   }
 
-  const { Item: productData } = await dynamoDb.get(params).promise()
-  const { Item: countData } = await dynamoDb.get(stockParams).promise()
+  const { Item: productData } = await dynamoDb.getItem(params)
+  const { Item: countData } = await dynamoDb.getItem(stockParams)
 
-  return {
-    ...productData,
-    count: countData.count
-  }
+  return unmarshall({ ...productData, count: countData.count })
 }
