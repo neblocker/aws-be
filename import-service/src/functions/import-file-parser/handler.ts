@@ -5,6 +5,7 @@ import {
   CopyObjectCommand,
   DeleteObjectCommand
 } from "@aws-sdk/client-s3"
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs"
 import csv from "csv-parser"
 
 const importFileParser = async (event: S3Event) => {
@@ -52,10 +53,20 @@ const importFileParser = async (event: S3Event) => {
 
 const handleStream = (stream: NodeJS.ReadableStream) => {
   return new Promise((resolve, reject) => {
+    const client = new SQSClient({ region: "us-east-1" })
     const dataArray: unknown[] = []
     stream
       .pipe(csv())
-      .on("data", (data) => dataArray.push(data))
+      .on("data", (data) => {
+        client.send(
+          new SendMessageCommand({
+            QueueUrl:
+              "https://sqs.eu-west-1.amazonaws.com/023721665280/catalogItemsQueue",
+            MessageBody: data
+          })
+        )
+        dataArray.push(data)
+      })
       .on("error", (err) => reject(err))
       .on("end", () => {
         resolve(dataArray)
