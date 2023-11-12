@@ -1,7 +1,8 @@
+import { middyfy } from "@libs/lambda"
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda"
 import { getSingleProduct } from "src/services/getSingleProduct"
 
-export const getProductById = async (
+export const handler = async (
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
@@ -21,3 +22,5 @@ export const getProductById = async (
     }
   }
 }
+
+export const getProductById = middyfy(handler)
