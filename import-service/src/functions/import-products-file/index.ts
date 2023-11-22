@@ -9,8 +9,9 @@ export default {
         path: "import",
         cors: true,
         authorizer: {
-          type: "request",
+          type: "token",
           name: "basicAuthorizer",
+          identitySource: "method.request.header.Authorization",
           arn: "arn:aws:lambda:eu-west-1:023721665280:function:authorization-service-dev-basicAuthorizer"
         }
       }

@@ -1,10 +1,8 @@
-import { middyfy } from "@libs/lambda"
-
 const handler = async (event) => {
   const eventToken = event.authorizationToken
 
-  if (event.type !== "REQUEST") {
-    return "Unauthorized. Header credentials are missed!"
+  if (event.type !== "TOKEN") {
+    return generatePolicy("unknown", event.methodArn, "Deny")
   }
 
   try {
@@ -17,18 +15,18 @@ const handler = async (event) => {
         : "Allow"
     return generatePolicy(encodedToken, event.methodArn, effect)
   } catch (error) {
-    return `Access Denied - ${error.message}`
+    return generatePolicy("unknown", event.methodArn, "Deny")
   }
 }
 
-function generatePolicy(principleId: string, resource, effect = "Allow") {
+function generatePolicy(principalId: string, resource, effect = "Allow") {
   return {
-    principleId,
+    principalId,
     policyDocument: {
       Version: "2012-10-17",
       Statement: [
         {
-          Action: "exucute-api:Invoke",
+          Action: "execute-api:Invoke",
           Effect: effect,
           Resource: resource
         }
@@ -37,4 +35,4 @@ function generatePolicy(principleId: string, resource, effect = "Allow") {
   }
 }
 
-export const main = middyfy(handler)
+export const main = handler
