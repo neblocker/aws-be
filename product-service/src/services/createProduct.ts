@@ -24,6 +24,7 @@ export async function createSingleProduct(
     }
   }
 
+
   const stockParams = {
     Put: {
       TableName: process.env.STOCK_TABLE!,
