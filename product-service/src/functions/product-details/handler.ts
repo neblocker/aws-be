@@ -1,15 +1,19 @@
-import { APIGatewayProxyResult } from "aws-lambda"
+import { middyfy } from "@libs/lambda"
+import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda"
 import { getSingleProduct } from "src/services/getSingleProduct"
 
-export const getProductById = async (event): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+  event: APIGatewayEvent
+): Promise<APIGatewayProxyResult> => {
   try {
     const { productId } = event.pathParameters
+    const productDetails = await getSingleProduct(productId)
 
-    console.log("product id", productId)
+    console.log("product details", productDetails)
 
     return {
       statusCode: 200,
-      body: JSON.stringify(await getSingleProduct(productId))
+      body: JSON.stringify(productDetails)
     }
   } catch (error) {
     return {
@@ -18,3 +22,5 @@ export const getProductById = async (event): Promise<APIGatewayProxyResult> => {
     }
   }
 }
+
+export const getProductById = middyfy(handler)

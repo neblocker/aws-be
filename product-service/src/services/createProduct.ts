@@ -1,8 +1,4 @@
-import { DynamoDB } from "aws-sdk"
-import {
-  TransactWriteItem,
-  TransactWriteItemsInput
-} from "aws-sdk/clients/dynamodb"
+import { DynamoDB, TransactWriteItemsInput } from "@aws-sdk/client-dynamodb"
 import { Product } from "src/database"
 import { v4 as uuidv4 } from "uuid"
 
@@ -15,8 +11,8 @@ export async function createSingleProduct(
     throw new Error("env variables not defined")
   }
 
-  const productId = uuidv4() as string
-  const productParams: TransactWriteItem = {
+  const productId = uuidv4()
+  const productParams = {
     Put: {
       TableName: process.env.PRODUCT_TABLE!,
       Item: {
@@ -28,7 +24,8 @@ export async function createSingleProduct(
     }
   }
 
-  const stockParams: TransactWriteItem = {
+
+  const stockParams = {
     Put: {
       TableName: process.env.STOCK_TABLE!,
       Item: {
@@ -37,6 +34,7 @@ export async function createSingleProduct(
       }
     }
   }
+
   const params: TransactWriteItemsInput = {
     TransactItems: [productParams, stockParams]
   }
