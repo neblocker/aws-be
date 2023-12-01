@@ -4,6 +4,7 @@ import getProducts from "@functions/product-list"
 import getProductById from "@functions/product-details"
 import createProduct from "@functions/create-product"
 import initDb from "@functions/initialize-db"
+import proceedCatalogBatch from "@functions/catalogBatchProcess"
 
 const serverlessConfiguration: AWS = {
   service: "product-service",
@@ -36,18 +37,49 @@ const serverlessConfiguration: AWS = {
               "dynamodb:Query",
               "dynamodb:DeleteItem",
               "dynamodb:BatchWriteItem",
-              "dynamodb:transactWriteItems"
+              "dynamodb:transactWriteItems",
+              "sqs:*"
             ],
             Resource: [
               "arn:aws:dynamodb:eu-west-1:023721665280:table/Products",
-              "arn:aws:dynamodb:eu-west-1:023721665280:table/Stock"
+              "arn:aws:dynamodb:eu-west-1:023721665280:table/Stock",
+              "arn:aws:dynamodb:eu-west-1:023721665280:CatalogItemsQueue"
             ]
           }
         ]
       }
     }
   },
-  functions: { getProducts, getProductById, createProduct, initDb },
+  resources: {
+    Resources: {
+      CatalogItemsQueue: {
+        Type: "AWS::SQS::Queue",
+        Properties: {
+          QueueName: "catalogItemsQueue"
+        }
+      },
+      createProductTopic: {
+        Type: "AWS::SNS::Topic"
+      },
+      EmailSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Protocol: "email",
+          TopicArn: {
+            Ref: "createProductTopic"
+          },
+          Endpoint: "jamshid_tursunov@epam.com"
+        }
+      }
+    }
+  },
+  functions: {
+    getProducts,
+    getProductById,
+    createProduct,
+    initDb,
+    proceedCatalogBatch
+  },
   package: { individually: true },
   custom: {
     esbuild: {

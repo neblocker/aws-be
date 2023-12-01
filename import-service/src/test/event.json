@@ -5,5 +5,5 @@
   "queryStringParameters": {
     "name": "products.csv"
   },
-  "body": {}
+  "body": "{\"name\": \"Frederic\"}"
 }

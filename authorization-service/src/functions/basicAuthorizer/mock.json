@@ -1,0 +1,5 @@
+{
+  "type": "REQUEST",
+  "authorizationToken": "Basic bmVibG9ja2VyOlRFU1RfUEFTU1dPUkQ=",
+  "methodArn": "arn:aws:execute-api:eu-west-1:123456789012:example/prod/POST/{proxy+}"
+}

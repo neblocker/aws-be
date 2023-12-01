@@ -1,0 +1,39 @@
+{
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "Records": [
+    {
+      "messageId": "1",
+      "receiptHandle": "handle1",
+      "body": "{\"title\":\"Product 222\",\"description\":\"mock description 222\",\"price\":420, \"count\":1}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1641234567890",
+        "SenderId": "sender-1",
+        "ApproximateFirstReceiveTimestamp": "1641234567890"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "d41d8cd98f00b204e9800998ecf8427e",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:dynamodb:eu-west-1:023721665280:CatalogItemsQueue",
+      "awsRegion": "eu-west-1"
+    },
+    {
+      "messageId": "2",
+      "receiptHandle": "handle2",
+      "body": "{\"title\":\"Product 125\",\"description\":\"mock description 222\",\"price\":420, \"count\":1}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1641234567891",
+        "SenderId": "sender-2",
+        "ApproximateFirstReceiveTimestamp": "1641234567891"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "d41d8cd98f00b204e9800998ecf8427f",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:dynamodb:eu-west-1:023721665280:CatalogItemsQueue",
+      "awsRegion": "eu-west-1"
+    }
+  ]
+}
